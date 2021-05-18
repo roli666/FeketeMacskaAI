@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\cat.png" />
+    <None Remove="Resources\predator.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\cat.png" />
+    <Resource Include="Resources\predator.png" />
+  </ItemGroup>
+
+</Project>

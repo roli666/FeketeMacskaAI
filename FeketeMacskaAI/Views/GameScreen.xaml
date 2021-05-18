@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="FeketeMacskaAI.Views.GameScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FeketeMacskaAI.Views" xmlns:viewmodels="clr-namespace:FeketeMacskaAI.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:GameScreenVM}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <TextBlock>Catchers: <Run Text="{Binding Catchers}"></Run></TextBlock>
+            <TextBlock>Player: <Run Text="{Binding Game.PlayerTurn, Mode=OneWay}"></Run></TextBlock>
+        </StackPanel>
+        <Button Grid.Column="4" FontSize="16" Padding="4" Margin="5" Command="{Binding EndGame}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top">New game</Button>
+        <Grid Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="3" x:Name="GameArea">
+            <TextBlock Text="{Binding VictoryText}" d:Text="The cats have won" FontSize="40" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+            <Viewbox Stretch="Fill" Visibility="{Binding GameScreenVisibility}">
+                <ContentPresenter Content="{Binding Game}" />
+            </Viewbox>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:views="clr-namespace:FeketeMacskaAI.Views"
+                    xmlns:viewModels="clr-namespace:FeketeMacskaAI.ViewModels"
+                    xmlns:logic="clr-namespace:FeketeMacskaAI.Logic">
+    <DataTemplate DataType="{x:Type viewModels:StartScreenVM}">
+        <views:StartScreen></views:StartScreen>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:GameScreenVM}">
+        <views:GameScreen></views:GameScreen>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type logic:GridCell}">
+        <views:GridCell></views:GridCell>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type logic:GridRow}">
+        <views:GridRow></views:GridRow>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:GameVM}">
+        <views:Game></views:Game>
+    </DataTemplate>
+</ResourceDictionary>
