@@ -9,9 +9,11 @@ namespace FeketeMacskaAI.ViewModels
     public class GameVM : ViewModel
     {
         private const int GridSize = 11;
-        public GridRow[] Grid { get; set; } = new GridRow[GridSize];
         private readonly List<GridCell> validSteps = new();
+        private GridCell RecommendedCell;
         private GridCell ActiveCell;
+
+        public GridRow[] Grid { get; set; } = new GridRow[GridSize];
         public List<Point> Cats { get; set; }
         public List<Point> Catchers { get; set; }
 
@@ -47,7 +49,6 @@ namespace FeketeMacskaAI.ViewModels
         }
 
         private int Turn;
-
         private bool catcherTurn = false;
         private const int catcherPlayer = 3;
         private readonly Action CatchersWonCallback;
@@ -93,10 +94,12 @@ namespace FeketeMacskaAI.ViewModels
                 if (cell.Status == GridCellStatus.Empty)
                     validSteps.Add(cell);
             }
+
             foreach (var step in validSteps)
             {
                 step.IsValidStep = true;
             }
+
             if (validSteps.Count == 0)
             {
                 KillCat(PlayerTurn);
@@ -201,6 +204,12 @@ namespace FeketeMacskaAI.ViewModels
                 ActiveCell = null;
             }
 
+            if (RecommendedCell != null)
+            {
+                RecommendedCell.IsRecommendedStep = false;
+                RecommendedCell = null;
+            }
+
             catcherTurn = !catcherTurn;
             ClearValidSteps();
             NextTurn();
@@ -228,12 +237,47 @@ namespace FeketeMacskaAI.ViewModels
             }
             Turn++;
             SetValidMoves();
-            if(validSteps.Count == 0)
+            SetRecommendedMoves();
+            if (validSteps.Count == 0)
             {
                 return;
             }
             ActiveCell = Grid[Cats[PlayerTurn].X].Cells[Cats[PlayerTurn].Y];
             ActiveCell.IsActive = true;
+        }
+
+        private (int, GridCell) MaxN(Point playerPosition, int depth, int score)
+        {
+            var validMoves = Grid.GetValidStepsForPlayer(playerPosition);
+            //var moveTo = new Point();
+            var moveTo = new Point(validMoves.FirstOrDefault()?.x ?? 0, validMoves.FirstOrDefault()?.y ?? 0);
+
+            if (depth == 0)
+            {
+                return (score, Grid[moveTo.Y].Cells[moveTo.X]);
+            }
+
+            if (validMoves.Any(c => c.WinningCell))
+                return (score, validMoves.FirstOrDefault(cell => cell.WinningCell));
+
+            foreach (var move in validMoves)
+            {
+                var movePos = new Point(move.x, move.y);
+                var eval = MaxN(movePos, depth - 1, score + 1);
+                if (eval.Item1 > score)
+                {
+                    moveTo = new Point(eval.Item2.x, eval.Item2.y);
+                }
+            }
+
+            return (score, Grid[moveTo.Y].Cells[moveTo.X]);
+        }
+
+        private void SetRecommendedMoves()
+        {
+            var recommendedStep = MaxN(Cats[PlayerTurn], 5, 0);
+            RecommendedCell = Grid[recommendedStep.Item2.x].Cells[recommendedStep.Item2.y];
+            RecommendedCell.IsRecommendedStep = true;
         }
 
         private void InitializeGrid()
@@ -247,7 +291,7 @@ namespace FeketeMacskaAI.ViewModels
                 var cells = new List<GridCell>();
                 for (int j = 0; j < 11; j++)
                 {
-                    if (i == 0 || i == 10 || j == 0 || j == 11)
+                    if (i == 0 || i == 10 || j == 0 || j == 10)
                     {
                         cells.Add(new GridCell(GridCellStatus.Empty, j, i, -1, true, MoveTo, SetActiveCatcher));
                     }

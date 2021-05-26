@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
@@ -7,7 +10,6 @@ namespace FeketeMacskaAI.Logic
     public class GridCell : ViewModel
     {
         private GridCellStatus _status;
-
         public GridCellStatus Status
         {
             get => _status;
@@ -41,13 +43,13 @@ namespace FeketeMacskaAI.Logic
         }
 
         private SolidColorBrush _bgColor;
-
         public SolidColorBrush BackgroundColor
         {
             get => _bgColor;
             set
             {
                 _bgColor = value;
+                Debug.WriteLine($"setting bgcolor of: {x} {y} to color:{value.Color.R} {value.Color.G} {value.Color.B}");
                 OnPropertyChanged();
             }
         }
@@ -55,7 +57,6 @@ namespace FeketeMacskaAI.Logic
         public bool WinningCell { get; set; }
 
         private Visibility _catVisibility;
-
         public Visibility CatVisibility
         {
             get => _catVisibility;
@@ -67,7 +68,6 @@ namespace FeketeMacskaAI.Logic
         }
 
         private Visibility _catcherVisibility;
-
         public Visibility CatcherVisibility
         {
             get => _catcherVisibility;
@@ -144,10 +144,10 @@ namespace FeketeMacskaAI.Logic
         {
             if (IsActive)
                 BackgroundColor = new SolidColorBrush(Colors.Red);
-            else if (IsValidStep)
-                BackgroundColor = new SolidColorBrush(Colors.Green);
             else if (IsRecommendedStep)
                 BackgroundColor = new SolidColorBrush(Colors.Yellow);
+            else if (IsValidStep)
+                BackgroundColor = new SolidColorBrush(Colors.Green);
             else
                 BackgroundColor = new SolidColorBrush(Colors.White);
         }
